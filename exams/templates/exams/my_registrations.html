@@ -1,0 +1,31 @@
+{% extends "exams/base.html" %}
+{% block title %}My registrations{% endblock %}
+{% block content %}
+<h1>My registrations</h1>
+<div class="card">
+  <table class="table">
+    <thead><tr><th>Exam</th><th>Date</th><th>Hall ticket</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for r in regs %}
+      <tr>
+        <td><b>{{ r.exam.title }}</b><div class="muted">{{ r.exam.code }} &middot; {{ r.exam.venue }}</div></td>
+        <td>{{ r.exam.date|date:"d M Y" }}<div class="muted">{{ r.exam.start_time|time:"h:i A" }}</div></td>
+        <td>{% if r.status == 'confirmed' %}{{ r.hall_ticket }}{% else %}&ndash;{% endif %}</td>
+        <td><span class="pill {% if r.status == 'confirmed' %}ok{% else %}bad{% endif %}">{{ r.get_status_display }}</span></td>
+        <td class="actions">
+          {% if r.status == 'confirmed' %}
+            <a class="btn small ghost" href="{% url 'hall_ticket' r.pk %}">Hall ticket</a>
+            {% if r.can_cancel %}
+            <form method="post" action="{% url 'cancel_registration' r.pk %}" data-confirm="Cancel your registration for {{ r.exam.title }}?" data-danger="1">
+              {% csrf_token %}<button class="btn small danger">Cancel</button>
+            </form>{% endif %}
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5" class="empty">You have not registered for any exam yet. <a href="{% url 'exam_list' %}">Find exams</a></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

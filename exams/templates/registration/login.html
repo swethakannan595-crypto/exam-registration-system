@@ -1,0 +1,15 @@
+{% extends "exams/base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block auth %}
+<div class="auth-card">
+  <h1>ExamDesk</h1>
+  <p class="muted">Sign in to register for exams and see your results.</p>
+  <form method="post">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="err">Username or password is incorrect.</div>{% endif %}
+    <label>Username {{ form.username }}</label>
+    <label>Password {{ form.password }}</label>
+    <button class="btn block" type="submit">Sign in</button>
+  </form>
+  <p class="muted center">New student? <a href="{% url 'signup' %}">Create an account</a></p>
+</div>
+{% endblock %}

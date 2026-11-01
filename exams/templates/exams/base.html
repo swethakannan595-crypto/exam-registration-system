@@ -1,0 +1,59 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Exam Registration{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+{% if user.is_authenticated %}
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">ExamDesk</div>
+    <nav>
+      <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}on{% endif %}">Dashboard</a>
+      <a href="{% url 'exam_list' %}" class="{% if request.resolver_match.url_name == 'exam_list' %}on{% endif %}">Find exams</a>
+      <a href="{% url 'my_registrations' %}" class="{% if request.resolver_match.url_name == 'my_registrations' %}on{% endif %}">My registrations</a>
+      <a href="{% url 'results' %}" class="{% if 'result' in request.resolver_match.url_name %}on{% endif %}">Results</a>
+      <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}on{% endif %}">Profile</a>
+      {% if user.is_staff %}<a href="{% url 'admin:index' %}">Admin panel</a>{% endif %}
+    </nav>
+    <form method="post" action="{% url 'logout' %}" class="logout">{% csrf_token %}
+      <button class="btn ghost" type="submit">Sign out</button>
+    </form>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">Menu</button>
+      <div class="who">{{ user.get_full_name|default:user.username }}</div>
+    </header>
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+{% else %}
+<div class="auth-wrap">{% block auth %}{% endblock %}</div>
+{% endif %}
+
+<div class="toasts" id="toasts">
+  {% for m in messages %}<div class="toast {{ m.tags }}">{{ m }}</div>{% endfor %}
+</div>
+
+<dialog id="confirmDlg">
+  <form method="dialog">
+    <h3 id="dlgTitle">Please confirm</h3>
+    <p id="dlgText"></p>
+    <div class="row end">
+      <button value="cancel" class="btn ghost">Go back</button>
+      <button value="ok" class="btn" id="dlgOk">Confirm</button>
+    </div>
+  </form>
+</dialog>
+<script src="{% static 'js/app.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

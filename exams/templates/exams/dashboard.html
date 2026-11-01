@@ -1,0 +1,129 @@
+{% extends "exams/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Hello, {{ user.first_name|default:user.username }}</h1>
+
+{% if next_exam %}
+<section class="next" data-start="{{ next_exam_iso }}">
+  <div>
+    <div class="muted">Your next exam</div>
+    <h2>{{ next_exam.exam.title }}</h2>
+    <div class="muted">{{ next_exam.exam.date|date:"D, d M Y" }} at {{ next_exam.exam.start_time|time:"h:i A" }} &middot; {{ next_exam.exam.venue }}</div>
+    <a class="btn small" href="{% url 'hall_ticket' next_exam.pk %}">Open hall ticket</a>
+  </div>
+  <div class="countdown" id="countdown" aria-live="off">
+    <div><b id="cd-d">0</b><span>days</span></div>
+    <div><b id="cd-h">0</b><span>hours</span></div>
+    <div><b id="cd-m">0</b><span>min</span></div>
+    <div><b id="cd-s">0</b><span>sec</span></div>
+  </div>
+</section>
+{% endif %}
+
+<div class="stats">
+  <a class="stat" href="{% url 'my_registrations' %}"><b data-count="{{ total_registered }}">0</b><span>Exams registered</span></a>
+  <a class="stat" href="{% url 'my_registrations' %}"><b data-count="{{ upcoming_count }}">0</b><span>Upcoming</span></a>
+  <a class="stat" href="{% url 'results' %}"><b data-count="{{ results_count }}">0</b><span>Results published</span></a>
+  <div class="stat"><b>{% if average is not None %}{{ average }}%{% else %}&ndash;{% endif %}</b><span>Average score</span></div>
+</div>
+
+<div class="cols">
+  <section class="card">
+    <div class="card-head"><h3>Score by exam</h3>
+      <div class="seg" id="chartToggle">
+        <button class="on" data-type="bar">Bar</button><button data-type="line">Line</button>
+      </div>
+    </div>
+    <div class="chart-box"><canvas id="scoreChart"></canvas></div>
+    <p class="empty hidden" id="scoreEmpty">Your scores will appear here once results are published.</p>
+  </section>
+  <section class="card">
+    <div class="card-head"><h3>Pass / fail</h3></div>
+    <div class="chart-box small"><canvas id="passChart"></canvas></div>
+    <p class="empty hidden" id="passEmpty">No results yet.</p>
+  </section>
+</div>
+
+<div class="cols">
+  <section class="card">
+    <div class="card-head"><h3>Upcoming exams</h3><a href="{% url 'my_registrations' %}">View all</a></div>
+    {% for r in upcoming %}
+      <div class="item">
+        <div><b>{{ r.exam.title }}</b><div class="muted">{{ r.exam.date|date:"d M Y" }} &middot; {{ r.exam.start_time|time:"h:i A" }}</div></div>
+        <a class="btn small ghost" href="{% url 'hall_ticket' r.pk %}">Hall ticket</a>
+      </div>
+    {% empty %}
+      <p class="empty">No upcoming exams. <a href="{% url 'exam_list' %}">Find an exam to register for.</a></p>
+    {% endfor %}
+  </section>
+  <section class="card">
+    <div class="card-head"><h3>Latest results</h3><a href="{% url 'results' %}">View all</a></div>
+    {% for r in latest_results %}
+      <a class="item link" href="{% url 'result_detail' r.pk %}">
+        <div><b>{{ r.registration.exam.title }}</b><div class="muted">{{ r.marks }} / {{ r.max_marks }}</div></div>
+        <span class="pill {% if r.passed %}ok{% else %}bad{% endif %}">{{ r.grade }}</span>
+      </a>
+    {% empty %}
+      <p class="empty">No results published yet.</p>
+    {% endfor %}
+  </section>
+</div>
+
+{% if open_exams %}
+<section class="card">
+  <div class="card-head"><h3>Open for registration</h3><a href="{% url 'exam_list' %}">See all</a></div>
+  {% for e in open_exams %}
+    <div class="item">
+      <div><b>{{ e.title }}</b><div class="muted">{{ e.date|date:"d M Y" }} &middot; {{ e.seats_left }} seats left &middot; closes {{ e.registration_deadline|date:"d M" }}</div></div>
+      <form method="post" action="{% url 'register_exam' e.pk %}" data-confirm="Register for {{ e.title }}? Fee: ₹{{ e.fee }}.">
+        {% csrf_token %}<input type="hidden" name="next" value="{% url 'dashboard' %}">
+        <button class="btn small">Register</button>
+      </form>
+    </div>
+  {% endfor %}
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const css = getComputedStyle(document.documentElement);
+const teal = css.getPropertyValue('--teal').trim(), green = css.getPropertyValue('--green').trim(),
+      red = css.getPropertyValue('--red').trim(), grey = css.getPropertyValue('--line').trim();
+let scoreChart;
+
+fetch("{% url 'dashboard_data' %}").then(r => r.json()).then(d => {
+  if (!d.labels.length) {
+    document.getElementById('scoreEmpty').classList.remove('hidden');
+    document.getElementById('passEmpty').classList.remove('hidden');
+    document.getElementById('scoreChart').parentElement.classList.add('hidden');
+    document.getElementById('passChart').parentElement.classList.add('hidden');
+    return;
+  }
+  const build = type => {
+    if (scoreChart) scoreChart.destroy();
+    scoreChart = new Chart(document.getElementById('scoreChart'), {
+      type,
+      data: { labels: d.labels, datasets: [{ label: 'Score %', data: d.percentages,
+        backgroundColor: teal, borderColor: teal, borderRadius: 4, tension: .3 }] },
+      options: { maintainAspectRatio: false,
+        scales: { y: { min: 0, max: 100, grid: { color: grey } }, x: { grid: { display: false } } },
+        plugins: { legend: { display: false },
+          tooltip: { callbacks: { title: i => d.titles[i[0].dataIndex], label: c => c.parsed.y + '%' } } },
+        onClick: () => { window.location = "{% url 'results' %}"; } }
+    });
+  };
+  build('bar');
+  document.querySelectorAll('#chartToggle button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#chartToggle button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on'); build(b.dataset.type);
+  }));
+  new Chart(document.getElementById('passChart'), {
+    type: 'doughnut',
+    data: { labels: ['Passed', 'Failed'], datasets: [{ data: d.pass_fail, backgroundColor: [green, red], borderWidth: 0 }] },
+    options: { maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom' } } }
+  });
+});
+</script>
+{% endblock %}

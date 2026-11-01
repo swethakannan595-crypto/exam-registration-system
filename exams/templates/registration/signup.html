@@ -1,0 +1,19 @@
+{% extends "exams/base.html" %}
+{% block title %}Create account{% endblock %}
+{% block auth %}
+<div class="auth-card wide">
+  <h1>Create your student account</h1>
+  <form method="post">{% csrf_token %}
+    <div class="grid2">
+    {% for f in form %}
+      <label class="{% if f.name in 'password1 password2' %}{% endif %}">{{ f.label }} {{ f }}
+        {% for e in f.errors %}<span class="err">{{ e }}</span>{% endfor %}
+        {% if f.help_text and f.name != 'username' %}<small class="muted">{{ f.help_text|safe }}</small>{% endif %}
+      </label>
+    {% endfor %}
+    </div>
+    <button class="btn block" type="submit">Create account</button>
+  </form>
+  <p class="muted center">Already registered? <a href="{% url 'login' %}">Sign in</a></p>
+</div>
+{% endblock %}

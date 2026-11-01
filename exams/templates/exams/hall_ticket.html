@@ -1,0 +1,19 @@
+{% extends "exams/base.html" %}
+{% block title %}Hall ticket {{ reg.hall_ticket }}{% endblock %}
+{% block content %}
+<div class="row no-print"><h1>Hall ticket</h1><button class="btn" onclick="window.print()">Print</button></div>
+<div class="ticket card">
+  <div class="ticket-head"><b>ExamDesk</b><span>{{ reg.hall_ticket }}</span></div>
+  <h2>{{ reg.exam.title }} ({{ reg.exam.code }})</h2>
+  <dl class="two">
+    <dt>Candidate</dt><dd>{{ reg.student.get_full_name|default:reg.student.username }}</dd>
+    <dt>Roll number</dt><dd>{{ reg.student.profile.roll_no }}</dd>
+    <dt>Department</dt><dd>{{ reg.student.profile.department }}</dd>
+    <dt>Date</dt><dd>{{ reg.exam.date|date:"l, d F Y" }}</dd>
+    <dt>Reporting time</dt><dd>{{ reg.exam.start_time|time:"h:i A" }} ({{ reg.exam.duration_minutes }} minutes)</dd>
+    <dt>Venue</dt><dd>{{ reg.exam.venue }}</dd>
+    <dt>Registered on</dt><dd>{{ reg.registered_at|date:"d M Y, h:i A" }}</dd>
+  </dl>
+  <p class="muted">Carry a printed copy of this ticket and a valid photo ID. Reach the venue 30 minutes early.</p>
+</div>
+{% endblock %}

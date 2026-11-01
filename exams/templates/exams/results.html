@@ -1,0 +1,30 @@
+{% extends "exams/base.html" %}
+{% block title %}Results{% endblock %}
+{% block content %}
+<h1>My results</h1>
+<div class="card">
+  <table class="table">
+    <thead><tr><th>Exam</th><th>Date</th><th>Marks</th><th>Score</th><th>Grade</th><th></th></tr></thead>
+    <tbody>
+    {% for r in results %}
+      <tr>
+        <td><b>{{ r.registration.exam.title }}</b><div class="muted">{{ r.registration.exam.code }}</div></td>
+        <td>{{ r.registration.exam.date|date:"d M Y" }}</td>
+        <td>{{ r.marks }} / {{ r.max_marks }}</td>
+        <td><div class="bar"><i class="{% if r.passed %}okbg{% else %}badbg{% endif %}" style="width:{{ r.percentage }}%"></i></div>{{ r.percentage }}%</td>
+        <td><span class="pill {% if r.passed %}ok{% else %}bad{% endif %}">{{ r.grade }}</span></td>
+        <td><a class="btn small ghost" href="{% url 'result_detail' r.pk %}">View</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6" class="empty">No results have been published for you yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if pending %}
+<section class="card">
+  <h3>Awaiting results</h3>
+  {% for r in pending %}<div class="item"><div><b>{{ r.exam.title }}</b><div class="muted">Held on {{ r.exam.date|date:"d M Y" }}</div></div><span class="pill warn">Pending</span></div>{% endfor %}
+</section>
+{% endif %}
+{% endblock %}

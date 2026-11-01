@@ -1,0 +1,47 @@
+{% extends "exams/base.html" %}
+{% block title %}Find exams{% endblock %}
+{% block content %}
+<h1>Find exams</h1>
+<form class="filters" method="get">
+  <input type="search" id="liveSearch" name="q" value="{{ q }}" placeholder="Search by title, code or venue" autocomplete="off">
+  <select name="filter" onchange="this.form.submit()">
+    <option value="all" {% if flt == 'all' %}selected{% endif %}>All upcoming</option>
+    <option value="open" {% if flt == 'open' %}selected{% endif %}>Open for registration</option>
+    <option value="registered" {% if flt == 'registered' %}selected{% endif %}>Registered by me</option>
+  </select>
+</form>
+
+<div class="exam-grid" id="examGrid">
+{% for row in rows %}{% with e=row.exam %}
+  <article class="card exam" data-search="{{ e.title|lower }} {{ e.code|lower }} {{ e.venue|lower }}">
+    <div class="card-head"><h3>{{ e.title }}</h3><span class="muted">{{ e.code }}</span></div>
+    <p class="muted">{{ e.description|truncatechars:110 }}</p>
+    <dl>
+      <dt>Date</dt><dd>{{ e.date|date:"D, d M Y" }}, {{ e.start_time|time:"h:i A" }}</dd>
+      <dt>Duration</dt><dd>{{ e.duration_minutes }} min</dd>
+      <dt>Venue</dt><dd>{{ e.venue }}</dd>
+      <dt>Fee</dt><dd>₹{{ e.fee }}</dd>
+      <dt>Closes</dt><dd>{{ e.registration_deadline|date:"d M Y" }}</dd>
+    </dl>
+    <div class="seatbar" title="{{ e.seats_left }} of {{ e.seats }} seats left">
+      <i style="width: {% widthratio e.seats_taken e.seats 100 %}%"></i>
+    </div>
+    <div class="muted small-t">{{ e.seats_left }} of {{ e.seats }} seats left</div>
+    <div class="row end">
+      {% if row.registered %}
+        <span class="pill ok">Registered</span>
+      {% elif e.is_open %}
+        <form method="post" action="{% url 'register_exam' e.pk %}" data-confirm="Register for {{ e.title }} on {{ e.date|date:'d M Y' }}? Fee: ₹{{ e.fee }}.">
+          {% csrf_token %}<button class="btn">Register</button>
+        </form>
+      {% else %}
+        <span class="pill bad">{% if e.deadline_passed %}Registration closed{% else %}Full{% endif %}</span>
+      {% endif %}
+    </div>
+  </article>
+{% endwith %}{% empty %}
+  <p class="empty">No exams match. Try clearing the search or changing the filter.</p>
+{% endfor %}
+</div>
+<p class="empty hidden" id="noMatch">No exams match your search.</p>
+{% endblock %}

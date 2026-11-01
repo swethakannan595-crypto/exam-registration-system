@@ -1,0 +1,20 @@
+{% extends "exams/base.html" %}
+{% block title %}Result - {{ result.registration.exam.code }}{% endblock %}
+{% block content %}
+<div class="row no-print"><h1>Result</h1><button class="btn" onclick="window.print()">Print result</button></div>
+<div class="ticket card">
+  <div class="ticket-head"><b>ExamDesk</b><span>{{ result.registration.hall_ticket }}</span></div>
+  <h2>{{ result.registration.exam.title }}</h2>
+  <div class="big-score {% if result.passed %}okc{% else %}badc{% endif %}">{{ result.percentage }}%
+    <span class="pill {% if result.passed %}ok{% else %}bad{% endif %}">{% if result.passed %}Pass{% else %}Fail{% endif %} &middot; Grade {{ result.grade }}</span></div>
+  <dl class="two">
+    <dt>Candidate</dt><dd>{{ user.get_full_name|default:user.username }}</dd>
+    <dt>Roll number</dt><dd>{{ user.profile.roll_no }}</dd>
+    <dt>Marks</dt><dd>{{ result.marks }} out of {{ result.max_marks }}</dd>
+    <dt>Exam date</dt><dd>{{ result.registration.exam.date|date:"d M Y" }}</dd>
+    <dt>Published</dt><dd>{{ result.published_at|date:"d M Y" }}</dd>
+    {% if result.remarks %}<dt>Remarks</dt><dd>{{ result.remarks }}</dd>{% endif %}
+  </dl>
+</div>
+<p class="no-print"><a href="{% url 'results' %}">Back to results</a></p>
+{% endblock %}
