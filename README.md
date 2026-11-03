@@ -47,6 +47,14 @@ The application is developed using the Django framework and uses SQLite for data
 
 ## How It Works
 
+1. The student opens the application through a web browser.
+2. The user logs in to access the application.
+3. Django processes the login request and displays the dashboard.
+4. The student views available examinations.
+5. The student proceeds with examination registration.
+6. Registration information is stored in the SQLite database.
+7. The student can view their registration details through the My Registrations section. 
+
 ```mermaid
 flowchart TD
     A[Student] --> B[Web Browser]
@@ -62,14 +70,6 @@ flowchart TD
     I --> C
     C --> B
 ```
-
-1. The student opens the application through a web browser.
-2. The user logs in to access the application.
-3. Django processes the login request and displays the dashboard.
-4. The student views available examinations.
-5. The student proceeds with examination registration.
-6. Registration information is stored in the SQLite database.
-7. The student can view their registration details through the My Registrations section.
 
 ## Architecture
 
@@ -252,6 +252,7 @@ Through this project, I gained practical experience in:
 ## Username & Password
 
 -username: admin    password: admin123
+
 -username: student  password: student123
 
 ## Author
