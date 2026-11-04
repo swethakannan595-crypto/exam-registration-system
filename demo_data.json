@@ -1,0 +1,279 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$GWnk16Dy3Qm5BCHQPLgGZY$3tRC38JhLJWnpMrOYjuvz8HKDmdlcXQJ7yUCyvE7NXs=",
+    "last_login": "2026-11-01T16:24:30.251Z",
+    "is_superuser": false,
+    "username": "student",
+    "first_name": "Demo",
+    "last_name": "Student",
+    "email": "student@example.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-01T14:00:09.664Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$r4EPGF5sJ7YUAdBJNcx4Uk$IPBII7WNG8x5IN0AesidZ1nX71a0C9MbOUy/IpjnLs8=",
+    "last_login": "2026-11-01T16:24:05.033Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-11-01T14:00:11.175Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "exams.studentprofile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "roll_no": "IT2027001",
+    "department": "BSc Information Technology",
+    "phone": "9876543210"
+  }
+},
+{
+  "model": "exams.studentprofile",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "roll_no": "TMP2",
+    "department": "IT",
+    "phone": "987654321"
+  }
+},
+{
+  "model": "exams.exam",
+  "pk": 1,
+  "fields": {
+    "title": "Programming in Python",
+    "code": "CS101",
+    "description": "End-term examination for Programming in Python.",
+    "date": "2026-09-22",
+    "start_time": "10:00:00",
+    "duration_minutes": 180,
+    "venue": "Block A, Hall 1",
+    "fee": "100.00",
+    "seats": 120,
+    "registration_deadline": "2026-09-17",
+    "is_active": true
+  }
+},
+{
+  "model": "exams.exam",
+  "pk": 2,
+  "fields": {
+    "title": "Database Management Systems",
+    "code": "CS102",
+    "description": "End-term examination for Database Management Systems.",
+    "date": "2026-10-07",
+    "start_time": "10:00:00",
+    "duration_minutes": 180,
+    "venue": "Block A, Hall 2",
+    "fee": "100.00",
+    "seats": 80,
+    "registration_deadline": "2026-10-02",
+    "is_active": true
+  }
+},
+{
+  "model": "exams.exam",
+  "pk": 3,
+  "fields": {
+    "title": "Web Technologies",
+    "code": "CS103",
+    "description": "End-term examination for Web Technologies.",
+    "date": "2026-10-22",
+    "start_time": "10:00:00",
+    "duration_minutes": 180,
+    "venue": "Block B, Hall 3",
+    "fee": "100.00",
+    "seats": 25,
+    "registration_deadline": "2026-10-17",
+    "is_active": true
+  }
+},
+{
+  "model": "exams.exam",
+  "pk": 4,
+  "fields": {
+    "title": "Cloud Computing",
+    "code": "CS201",
+    "description": "End-term examination for Cloud Computing.",
+    "date": "2026-11-13",
+    "start_time": "10:00:00",
+    "duration_minutes": 180,
+    "venue": "Block B, Hall 1",
+    "fee": "350.00",
+    "seats": 100,
+    "registration_deadline": "2026-11-08",
+    "is_active": true
+  }
+},
+{
+  "model": "exams.exam",
+  "pk": 5,
+  "fields": {
+    "title": "Data Structures",
+    "code": "CS202",
+    "description": "End-term examination for Data Structures.",
+    "date": "2026-11-21",
+    "start_time": "10:00:00",
+    "duration_minutes": 180,
+    "venue": "Block C, Lab 2",
+    "fee": "300.00",
+    "seats": 60,
+    "registration_deadline": "2026-11-16",
+    "is_active": true
+  }
+},
+{
+  "model": "exams.exam",
+  "pk": 6,
+  "fields": {
+    "title": "Computer Networks",
+    "code": "CS203",
+    "description": "End-term examination for Computer Networks.",
+    "date": "2026-12-01",
+    "start_time": "10:00:00",
+    "duration_minutes": 180,
+    "venue": "Block C, Hall 4",
+    "fee": "300.00",
+    "seats": 2,
+    "registration_deadline": "2026-11-26",
+    "is_active": true
+  }
+},
+{
+  "model": "exams.exam",
+  "pk": 7,
+  "fields": {
+    "title": "Machine Learning",
+    "code": "CS204",
+    "description": "End-term examination for Machine Learning.",
+    "date": "2026-12-16",
+    "start_time": "10:00:00",
+    "duration_minutes": 180,
+    "venue": "Block A, Hall 5",
+    "fee": "400.00",
+    "seats": 80,
+    "registration_deadline": "2026-12-11",
+    "is_active": true
+  }
+},
+{
+  "model": "exams.registration",
+  "pk": 1,
+  "fields": {
+    "student": 1,
+    "exam": 1,
+    "status": "confirmed",
+    "hall_ticket": "HT-CS101-00001",
+    "registered_at": "2026-11-01T14:00:11.094Z"
+  }
+},
+{
+  "model": "exams.registration",
+  "pk": 2,
+  "fields": {
+    "student": 1,
+    "exam": 2,
+    "status": "confirmed",
+    "hall_ticket": "HT-CS102-00002",
+    "registered_at": "2026-11-01T14:00:11.114Z"
+  }
+},
+{
+  "model": "exams.registration",
+  "pk": 3,
+  "fields": {
+    "student": 1,
+    "exam": 3,
+    "status": "confirmed",
+    "hall_ticket": "HT-CS103-00003",
+    "registered_at": "2026-11-01T14:00:11.133Z"
+  }
+},
+{
+  "model": "exams.registration",
+  "pk": 4,
+  "fields": {
+    "student": 1,
+    "exam": 4,
+    "status": "confirmed",
+    "hall_ticket": "HT-CS201-00004",
+    "registered_at": "2026-11-01T14:00:11.153Z"
+  }
+},
+{
+  "model": "exams.registration",
+  "pk": 5,
+  "fields": {
+    "student": 1,
+    "exam": 5,
+    "status": "confirmed",
+    "hall_ticket": "HT-CS202-00005",
+    "registered_at": "2026-11-01T14:00:11.164Z"
+  }
+},
+{
+  "model": "exams.registration",
+  "pk": 6,
+  "fields": {
+    "student": 2,
+    "exam": 4,
+    "status": "confirmed",
+    "hall_ticket": "HT-CS201-00006",
+    "registered_at": "2026-11-01T14:03:01.748Z"
+  }
+},
+{
+  "model": "exams.result",
+  "pk": 1,
+  "fields": {
+    "registration": 1,
+    "marks": "82.00",
+    "max_marks": "100.00",
+    "remarks": "Good effort",
+    "is_published": true,
+    "published_at": "2026-11-01T14:00:11.105Z"
+  }
+},
+{
+  "model": "exams.result",
+  "pk": 2,
+  "fields": {
+    "registration": 2,
+    "marks": "67.00",
+    "max_marks": "100.00",
+    "remarks": "Good effort",
+    "is_published": true,
+    "published_at": "2026-11-01T14:00:11.124Z"
+  }
+},
+{
+  "model": "exams.result",
+  "pk": 3,
+  "fields": {
+    "registration": 3,
+    "marks": "35.00",
+    "max_marks": "100.00",
+    "remarks": "Reappear",
+    "is_published": true,
+    "published_at": "2026-11-01T14:00:11.143Z"
+  }
+}
+]
